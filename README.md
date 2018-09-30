@@ -9,17 +9,17 @@ Employee Management System(EMS) Spring Boot app
    https://github.com/girirajvyas/rakuten-ems-sb  
  `git clone` all above repositories in rakuten-sb folder
 
-3. Setup Backend  
+2. Setup Backend  
    a. go to: rakuten-ems-sb  
    b. `mvn install`  
    c. `mvn spring-boot:run` (this will start server at default 8080 port)  
    
-4. Setup UI  
+3. Setup UI  
    a. go to: rakuten-ems-npm  
    b. `npm install`  
    c. `ng serve -o` (this will build and open the browser @ http://localhost:4200)  
   
-5. Configure UI  
+4. Configure UI  
    You can configure the project by updating the below properties in env.js file:  
    **File location**: rakuten-ems-npm\src\config   
    **Out of the box settings**:  
@@ -36,13 +36,31 @@ Employee Management System(EMS) Spring Boot app
 	  }
    
 
-6. Configure Back-end  
+5. Configure Back-end  
    You can configure the project by updating the below properties in application.properties file:  
    **File location**: rakuten-ems-sb\src\main\resources\  
    **Out of the box settings**:  
+    
+             rakuten.config.dateFormat=yyyy-MM-dd
+             rakuten.config.uploadPath=D://temp//
+             rakuten.config.departmentPattern=`^[a-zA-Z0-9\\-*_\\s]+$`
+
+6. Exposed APIs  
    
+   ```	
+   a. GET  /test                            Test (to be removed)  
+   b. POST /upload                          Upload .csv file containing employee data  
+   c. GET  /employees                       List All Employees  
+      GET  /employees?erroredRecord=false   List Only Valid Records  
+      GET  /employees?erroredRecord=true    List Records that are incorrect i.e with error  
+   d. GET  /employees/{id}	            Get Employee record by id  
+   e. PUT  /employees/{id}                  update Employee  
    ```
-    rakuten.config.dateFormat=yyyy-MM-dd
-    rakuten.config.uploadPath=D://temp//
-    rakuten.config.departmentPattern=^[a-zA-Z0-9\\-*_\\s]+$
-   ```
+   
+   All the above endpoints can be quickly tested by downloading and importing PostMan collection from:  
+   https://github.com/girirajvyas/rakuten-ems-helpers/tree/master/postman-collection     
+     
+7. Test Data  
+   https://github.com/girirajvyas/rakuten-ems-helpers/tree/master/test-data  
+   
+   
