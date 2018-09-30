@@ -16,5 +16,11 @@ import com.rakuten.ems.domain.Employee;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
+	Employee findById(Long id);
+	
+	List<Employee> findByEmpId(String empId);
+	
 	List<Employee> findByErroredRecord(boolean erroredRecord);
+
+	
 }

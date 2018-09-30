@@ -23,12 +23,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.rakuten.ems.config.ApplicationConstants;
 import com.rakuten.ems.config.RakutenConfiguration;
 import com.rakuten.ems.domain.DesignationType;
 import com.rakuten.ems.domain.Employee;
 import com.rakuten.ems.repository.EmployeeRepository;
 
+/**
+ * Employee Service Implementation
+ * 
+ * @author Giriraj Vyas
+ *
+ */
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
@@ -43,18 +48,34 @@ public class EmployeeServiceImpl implements EmployeeService {
 	/**
 	 * rakutenConfiguration
 	 */
-	@SuppressWarnings("unused")
 	@Inject
 	private RakutenConfiguration rakutenConfiguration;
 
 	@Override
-	public List<Employee> findAll() {
+	public List<Employee> findAll(Boolean erroredRecord) {
+		if(erroredRecord != null){
+			return this.findByErroredRecord(erroredRecord);
+		}
 		return employeeRepository.findAll();
+	}
+
+	public Employee findById(Long id) {
+		return employeeRepository.findById(id);
+	}
+	
+	@Override
+	public List<Employee> findByEmpId(String empId) {
+		return employeeRepository.findByEmpId(empId);
 	}
 
 	@Override
 	public List<Employee> findByErroredRecord(boolean erroredRecord) {
 		return employeeRepository.findByErroredRecord(erroredRecord);
+	}
+
+	@Override
+	public Employee save(Employee employee) {
+		return employeeRepository.save(employee);
 	}
 
 	@Override
@@ -83,15 +104,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 				}
 			}
 			employeeRepository.saveAll(employeeList);
-			employeeList.forEach(
-					emp -> LOGGER.info("Employee name: " + emp.getName() + "Errored Record: " + emp.isErroredRecord()));
+			employeeList.forEach(emp -> {
+				if (emp.isErroredRecord())
+					LOGGER.info("Errored Record employee name: " + emp.getName());
+			});
 		}
 
 		return employeeList;
 	}
 
 	private File convertMultiPartToFile(MultipartFile multipartFile) throws IOException {
-		File convFile = new File(ApplicationConstants.UPLOAD_PATH + multipartFile.getOriginalFilename());
+		File convFile = new File(rakutenConfiguration.getUploadPath() + multipartFile.getOriginalFilename());
 		convFile.getParentFile().mkdir();
 		convFile.createNewFile();
 		FileOutputStream fos = new FileOutputStream(convFile);
@@ -122,8 +145,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @return
 	 */
 	private boolean isInvalidDepartment(String department) {
-		// rakutenConfiguration.getDepartmentPattern(); can be used
-		Pattern regex = Pattern.compile(ApplicationConstants.DEPARTMENT_PATTERN);
+		// ApplicationConstants.DEPARTMENT_PATTERN can be used
+		Pattern regex = Pattern.compile(rakutenConfiguration.getDepartmentPattern());
 		Matcher matcher = regex.matcher(department);
 		if (matcher.find()) {
 			return false;
@@ -172,9 +195,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private boolean isInvalidJoiningDate(String date) {
 		if (date != null) {
 			try {
-				// rakutenConfiguration.getDateFormat() can be used as well
+				// ApplicationConstants.DATE_FORMAT can be used as well
 				LocalDate.parse(date.trim(), new DateTimeFormatterBuilder()
-						.appendPattern(ApplicationConstants.DATE_FORMAT).parseStrict().toFormatter());
+						.appendPattern(rakutenConfiguration.getDateFormat()).parseStrict().toFormatter());
 				return false;
 			} catch (DateTimeParseException e) {
 				LOGGER.info("Invalid date: " + date);

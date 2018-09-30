@@ -20,8 +20,10 @@ public class Employee {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Long id;
 	
+	// kept String as sometimes have letter
+	private String empId;
 	private String name;
 	private String department;
 	private String designation;
@@ -29,12 +31,20 @@ public class Employee {
 	private String joiningDate;
 	private boolean erroredRecord;
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(String empId) {
+		this.empId = empId;
 	}
 
 	public boolean isErroredRecord() {
