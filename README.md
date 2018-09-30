@@ -2,7 +2,7 @@
 Employee Management System(EMS) Spring Boot app
 
 # Run Project
-1. This project 1 part of 3 repositories for rakuten-ems:  
+1. This project is part 1 of 3 repositories for rakuten-ems:  
  Git Repositories locations:  
    https://github.com/girirajvyas/rakuten-ems-helpers  
    https://github.com/girirajvyas/rakuten-ems-npm  
